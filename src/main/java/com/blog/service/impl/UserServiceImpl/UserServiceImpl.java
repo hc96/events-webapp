@@ -4,10 +4,12 @@ import com.blog.mapper.UserMapper;
 import com.blog.pojo.User;
 import com.blog.service.UserService;
 import com.blog.utils.Md5Util;
+import com.blog.utils.ThreadLocalUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -31,5 +33,12 @@ public class UserServiceImpl implements UserService {
     public void update(User user){
         user.setUpdateTime(LocalDateTime.now());
         userMapper.update(user);
+    }
+
+    @Override
+    public void updateAvatar(String url){
+        Map<String, Object> map = ThreadLocalUtil.get();
+        Integer id = (Integer) map.get("id");
+        userMapper.updateAvatar(url, id);
     }
 }
