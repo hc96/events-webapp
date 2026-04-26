@@ -5,10 +5,9 @@ import com.blog.pojo.Result;
 import com.blog.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/category")
@@ -20,6 +19,31 @@ public class CategoryController {
     @PostMapping
     public Result add(@RequestBody @Validated Category category){
         categoryService.add(category);
+        return Result.success();
+    }
+
+    @GetMapping
+    public Result<List<Category>> list(){
+        List<Category> list = categoryService.list();
+        return Result.success(list);
+    }
+
+    @GetMapping("/detail")
+    public Result<Category> detail(Integer id){
+        Category c = categoryService.findById(id);
+        return Result.success(c);
+    }
+
+    @PutMapping
+    public Result update(@RequestBody @Validated Category category){
+        categoryService.update(category);
+        return Result.success();
+    }
+
+
+    @DeleteMapping
+    public Result delete(Integer id){
+        categoryService.deleteById(id);
         return Result.success();
     }
 
