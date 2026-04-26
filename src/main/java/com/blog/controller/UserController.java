@@ -6,6 +6,7 @@ import com.blog.service.UserService;
 import com.blog.utils.JwtUtil;
 import com.blog.utils.Md5Util;
 import com.blog.utils.ThreadLocalUtil;
+import org.springframework.util.StringUtils;
 import jakarta.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,6 +81,32 @@ public class UserController {
     @PatchMapping("/updateAvatar")
     public Result updateAvatar(@RequestParam @URL String url){
         userService.updateAvatar(url);
+        return Result.success();
+    }
+
+    @PatchMapping("/updatePwd")
+    public Result updatePwd(@RequestBody Map<String, String> params){
+        String oldPwd = params.get("old_pwd");
+        String newPwd = params.get("new_pwd");
+        String rePwd = params.get("re_pwd");
+
+        if(!StringUtils.hasLength(oldPwd) || !StringUtils.hasLength(newPwd) || !StringUtils.hasLength(rePwd)){
+            return Result.error("missing hahahah");
+        }
+
+       Map<String, Object> claims = ThreadLocalUtil.get();
+        String username = (String)claims.get("username");
+        User user = userService.findByUsername(username);
+
+        if(!user.getPassword().equals(Md5Util.getMD5String(oldPwd))){
+            return Result.error("wrong password");
+        }
+
+        if(!newPwd.equals(rePwd)){
+            return Result.error("passwords do not match");
+        }
+
+        userService.updatePwd(newPwd);
         return Result.success();
     }
 
