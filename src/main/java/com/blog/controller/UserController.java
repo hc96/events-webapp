@@ -91,7 +91,7 @@ public class UserController {
         String rePwd = params.get("re_pwd");
 
         if(!StringUtils.hasLength(oldPwd) || !StringUtils.hasLength(newPwd) || !StringUtils.hasLength(rePwd)){
-            return Result.error("missing hahahah");
+            return Result.error("missing params");
         }
 
        Map<String, Object> claims = ThreadLocalUtil.get();
