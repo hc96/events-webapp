@@ -1,6 +1,7 @@
 package com.blog.controller;
 
 import com.blog.pojo.Article;
+import com.blog.pojo.PageBean;
 import com.blog.pojo.Result;
 import com.blog.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +15,13 @@ public class ArticleController {
     @Autowired
     private ArticleService articleService;
 
-    @GetMapping("/list")
-    public Result list(){
-        return Result.success("yes it is a list");
+    @GetMapping
+    public Result<PageBean<Article>> list(    Integer pageNum,
+                                              Integer pageSize,
+                                              @RequestParam(required = false) Integer categoryId,
+                                              @RequestParam(required = false) String state){
+        PageBean<Article> pb =  articleService.list(pageNum,pageSize,categoryId,state);
+        return Result.success(pb);
     }
 
     @PostMapping
